@@ -1,9 +1,10 @@
 package rifqimuhammadaziz.javafxdatabase.entity;
 
-public class Faculty {
+public class Department {
 
     private int id;
     private String name;
+    private Faculty faculty;
 
     public int getId() {
         return id;
@@ -21,8 +22,11 @@ public class Faculty {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return name;
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
     }
 }

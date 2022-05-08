@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import rifqimuhammadaziz.javafxdatabase.dao.DepartmentDaoImpl;
 import rifqimuhammadaziz.javafxdatabase.dao.FacultyDaoImpl;
 import rifqimuhammadaziz.javafxdatabase.entity.Department;
@@ -41,11 +42,54 @@ public class MainController implements Initializable {
     private TableColumn<Department, String> departmentCol02;
     @FXML
     private TableColumn<Department, Faculty> departmentCol03;
+    @FXML
+    private Button btnSaveFaculty;
+    @FXML
+    private Button btnResetFaculty;
+    @FXML
+    private Button btnUpdateFaculty;
+    @FXML
+    private Button btnDeleteFaculty;
+    @FXML
+    private Button btnSaveDepartment;
+    @FXML
+    private Button btnResetDepartment;
+    @FXML
+    private Button btnUpdateDepartment;
+    @FXML
+    private Button btnDeleteDepartment;
 
     private ObservableList<Department> departments;
     private ObservableList<Faculty> faculties;
     private DepartmentDaoImpl departmentDao;
     private FacultyDaoImpl facultyDao;
+    private Faculty selectedFaculty;
+    private Department selectedDepartment;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        facultyDao = new FacultyDaoImpl();
+        departmentDao = new DepartmentDaoImpl();
+        faculties = FXCollections.observableArrayList();
+        departments = FXCollections.observableArrayList();
+
+        try {
+            faculties.addAll(facultyDao.getAll());
+            departments.addAll(departmentDao.getAll());
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        comboFaculty.setItems(faculties);
+        tableFaculty.setItems(faculties);
+        facultyCol01.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getId()).asObject());
+        facultyCol02.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
+
+        tableDepartment.setItems(departments);
+        departmentCol01.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getId()).asObject());
+        departmentCol02.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
+        departmentCol03.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getFaculty()));
+    }
 
     @FXML
     private void saveFacultyAction(ActionEvent actionEvent) {
@@ -91,28 +135,58 @@ public class MainController implements Initializable {
         }
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        facultyDao = new FacultyDaoImpl();
-        departmentDao = new DepartmentDaoImpl();
-        faculties = FXCollections.observableArrayList();
-        departments = FXCollections.observableArrayList();
+    @FXML
+    private void updateFacultyAction(ActionEvent actionEvent) {
+    }
 
-        try {
-            faculties.addAll(facultyDao.getAll());
-            departments.addAll(departmentDao.getAll());
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
+    @FXML
+    private void deleteFacultyAction(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    private void tableFacultyClicked(MouseEvent mouseEvent) {
+        selectedFaculty = tableFaculty.getSelectionModel().getSelectedItem();
+        if (selectedFaculty != null) {
+            txtFacultyName.setText(selectedFaculty.getName());
+            btnSaveFaculty.setDisable(true);
+            btnUpdateFaculty.setDisable(false);
+            btnDeleteFaculty.setDisable(false);
         }
+    }
 
-        comboFaculty.setItems(faculties);
-        tableFaculty.setItems(faculties);
-        facultyCol01.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getId()).asObject());
-        facultyCol02.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
+    @FXML
+    private void updateDepartmentAction(ActionEvent actionEvent) {
+    }
 
-        tableDepartment.setItems(departments);
-        departmentCol01.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getId()).asObject());
-        departmentCol02.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
-        departmentCol03.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getFaculty()));
+    @FXML
+    private void deleteDepartmentAction(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    private void tableDepartmentClicked(MouseEvent mouseEvent) {
+        selectedDepartment = tableDepartment.getSelectionModel().getSelectedItem();
+        if (selectedDepartment != null) {
+            txtDepartmentName.setText(selectedDepartment.getName());
+            comboFaculty.setValue(selectedDepartment.getFaculty());
+            btnSaveDepartment.setDisable(true);
+            btnUpdateDepartment.setDisable(false);
+            btnDeleteDepartment.setDisable(false);
+        }
+    }
+
+    private void resetFaculty() {
+        txtFacultyName.clear();
+        selectedFaculty = null;
+        btnSaveFaculty.setDisable(false);
+        btnUpdateFaculty.setDisable(true);
+        btnDeleteFaculty.setDisable(true);
+    }
+
+    private void resetDepartment() {
+        txtDepartmentName.clear();
+        selectedDepartment = null;
+        btnSaveDepartment.setDisable(false);
+        btnUpdateDepartment.setDisable(true);
+        btnDeleteDepartment.setDisable(true);
     }
 }

@@ -104,7 +104,7 @@ public class MainController implements Initializable {
                 if (facultyDao.addData(faculty) == 1) {
                     faculties.clear();
                     faculties.addAll(facultyDao.getAll());
-                    txtFacultyName.clear();
+                    resetFaculty();
                 }
             } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -126,8 +126,7 @@ public class MainController implements Initializable {
                 if (departmentDao.addData(department) == 1) {
                     departments.clear();
                     departments.addAll(departmentDao.getAll());
-                    txtDepartmentName.clear();
-                    comboFaculty.setItems(null);
+                    resetDepartment();
                 }
             } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -137,10 +136,27 @@ public class MainController implements Initializable {
 
     @FXML
     private void updateFacultyAction(ActionEvent actionEvent) {
+        if (txtFacultyName.getText().trim().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Please fill faculty name!");
+            alert.showAndWait();
+        } else {
+            selectedFaculty.setName(txtFacultyName.getText().trim());
+            try {
+                if (facultyDao.updateData(selectedFaculty) == 1) {
+                    faculties.clear();
+                    faculties.addAll(facultyDao.getAll());
+                    resetFaculty();
+                }
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML
     private void deleteFacultyAction(ActionEvent actionEvent) {
+        deleteObject(selectedFaculty);
     }
 
     @FXML
@@ -156,10 +172,28 @@ public class MainController implements Initializable {
 
     @FXML
     private void updateDepartmentAction(ActionEvent actionEvent) {
+        if (txtDepartmentName.getText().trim().isEmpty() || comboFaculty == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Please fill department name and faculty!");
+            alert.showAndWait();
+        } else {
+            selectedDepartment.setName(txtDepartmentName.getText().trim());
+            selectedDepartment.setFaculty(comboFaculty.getValue());
+            try {
+                if (departmentDao.updateData(selectedDepartment) == 1) {
+                    departments.clear();
+                    departments.addAll(departmentDao.getAll());
+                    resetDepartment();
+                }
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML
     private void deleteDepartmentAction(ActionEvent actionEvent) {
+        deleteObject(selectedDepartment);
     }
 
     @FXML
@@ -188,5 +222,34 @@ public class MainController implements Initializable {
         btnSaveDepartment.setDisable(false);
         btnUpdateDepartment.setDisable(true);
         btnDeleteDepartment.setDisable(true);
+    }
+
+    private void deleteObject(Object object) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("Are you sure want to delete data?");
+        alert.showAndWait();
+        if (alert.getResult() == ButtonType.OK) {
+            if (object instanceof Faculty) {
+                try {
+                    if (facultyDao.deleteData(selectedFaculty) == 1) {
+                        faculties.clear();
+                        faculties.addAll(facultyDao.getAll());
+                        resetFaculty();
+                    }
+                } catch (SQLException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } else if (object instanceof Department) {
+                try {
+                    if (departmentDao.deleteData(selectedDepartment) == 1) {
+                        departments.clear();
+                        departments.addAll(departmentDao.getAll());
+                        resetDepartment();
+                    }
+                } catch (SQLException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

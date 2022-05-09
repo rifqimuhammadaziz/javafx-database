@@ -56,4 +56,42 @@ public class DepartmentDaoImpl implements DaoService<Department> {
         }
         return result;
     }
+
+    @Override
+    public int updateData(Department object) throws SQLException, ClassNotFoundException {
+        int result = 0;
+        try (Connection connection = MySQLConnection.createConnection()) {
+            String QUERY = "UPDATE department SET name = ?, faculty_id = ? WHERE id = ?";
+            try (PreparedStatement ps = connection.prepareStatement(QUERY)) {
+                ps.setString(1, object.getName());
+                ps.setInt(2, object.getFaculty().getId());
+                ps.setInt(3, object.getId());
+                if (ps.executeUpdate() != 0) {
+                    connection.commit();
+                    result = 1;
+                } else {
+                    connection.rollback();
+                }
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public int deleteData(Department object) throws SQLException, ClassNotFoundException {
+        int result = 0;
+        try (Connection connection = MySQLConnection.createConnection()) {
+            String QUERY = "DELETE FROM department WHERE id = ?";
+            try (PreparedStatement ps = connection.prepareStatement(QUERY)) {
+                ps.setInt(1, object.getId());
+                if (ps.executeUpdate() != 0) {
+                    connection.commit();
+                    result = 1;
+                } else {
+                    connection.rollback();
+                }
+            }
+        }
+        return result;
+    }
 }

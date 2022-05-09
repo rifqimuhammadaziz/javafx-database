@@ -49,4 +49,41 @@ public class FacultyDaoImpl implements DaoService<Faculty> {
         }
         return result;
     }
+
+    @Override
+    public int updateData(Faculty object) throws SQLException, ClassNotFoundException {
+        int result = 0;
+        try (Connection connection = MySQLConnection.createConnection()) {
+            String QUERY = "UPDATE faculty SET name = ? WHERE id = ?";
+            try (PreparedStatement ps = connection.prepareStatement(QUERY)) {
+                ps.setString(1, object.getName());
+                ps.setInt(2, object.getId());
+                if (ps.executeUpdate() != 0) {
+                    connection.commit();
+                    result = 1;
+                } else {
+                    connection.rollback();
+                }
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public int deleteData(Faculty object) throws SQLException, ClassNotFoundException {
+        int result = 0;
+        try (Connection connection = MySQLConnection.createConnection()) {
+            String QUERY = "DELETE FROM faculty WHERE id = ?";
+            try (PreparedStatement ps = connection.prepareStatement(QUERY)) {
+                ps.setInt(1, object.getId());
+                if (ps.executeUpdate() != 0) {
+                    connection.commit();
+                    result = 1;
+                } else {
+                    connection.rollback();
+                }
+            }
+        }
+        return result;
+    }
 }

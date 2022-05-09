@@ -4,6 +4,7 @@ module rifqimuhammadaziz.javafxdatabase {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
+    requires jasperreports;
 
 
     opens rifqimuhammadaziz.javafxdatabase to javafx.fxml;

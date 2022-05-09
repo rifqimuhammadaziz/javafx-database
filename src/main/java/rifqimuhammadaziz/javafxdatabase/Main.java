@@ -14,9 +14,9 @@ public class Main extends Application {
 //        stage.setTitle("Main Application");
 //        stage.setScene(new Scene(root));
 //        stage.show();
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main-form.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("report-form.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("JavaFX Data Sharing");
+        stage.setTitle("JavaFX");
         stage.setScene(scene);
         stage.show();
     }

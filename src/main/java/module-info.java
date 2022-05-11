@@ -5,6 +5,8 @@ module rifqimuhammadaziz.javafxdatabase {
     requires javafx.fxml;
     requires java.sql;
     requires jasperreports;
+    requires java.persistence;
+    requires org.hibernate.orm.core;
 
 
     opens rifqimuhammadaziz.javafxdatabase to javafx.fxml;

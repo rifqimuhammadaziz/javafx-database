@@ -1,8 +1,9 @@
 package rifqimuhammadaziz.javafxdatabase.hibernateDao;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import rifqimuhammadaziz.javafxdatabase.hibernateEntity.Faculty;
-import rifqimuhammadaziz.javafxdatabase.util.DaoService;
 import rifqimuhammadaziz.javafxdatabase.util.HibernateDaoService;
 import rifqimuhammadaziz.javafxdatabase.util.HibernateUtil;
 
@@ -14,17 +15,50 @@ public class FacultyDaoImpl implements HibernateDaoService<Faculty> {
 
     @Override
     public int addData(Faculty object) {
-        return 0;
+        int result = 0;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            session.save(object);
+            transaction.commit();
+            result = 1 ;
+        } catch (HibernateException exception) {
+            transaction.rollback();
+        }
+        session.close();
+        return result;
     }
 
     @Override
     public int deleteData(Faculty object) {
-        return 0;
+        int result = 0;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            session.delete(object);
+            transaction.commit();
+            result = 1 ;
+        } catch (HibernateException exception) {
+            transaction.rollback();
+        }
+        session.close();
+        return result;
     }
 
     @Override
     public int updateData(Faculty object) {
-        return 0;
+        int result = 0;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            session.update(object);
+            transaction.commit();
+            result = 1 ;
+        } catch (HibernateException exception) {
+            transaction.rollback();
+        }
+        session.close();
+        return result;
     }
 
     @Override

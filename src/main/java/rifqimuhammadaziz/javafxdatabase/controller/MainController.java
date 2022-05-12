@@ -4,17 +4,16 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import rifqimuhammadaziz.javafxdatabase.dao.DepartmentDaoImpl;
-import rifqimuhammadaziz.javafxdatabase.dao.FacultyDaoImpl;
-import rifqimuhammadaziz.javafxdatabase.entity.Department;
-import rifqimuhammadaziz.javafxdatabase.entity.Faculty;
+import rifqimuhammadaziz.javafxdatabase.hibernateDao.DepartmentDaoImpl;
+import rifqimuhammadaziz.javafxdatabase.hibernateDao.FacultyDaoImpl;
+import rifqimuhammadaziz.javafxdatabase.hibernateEntity.Department;
+import rifqimuhammadaziz.javafxdatabase.hibernateEntity.Faculty;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -73,12 +72,8 @@ public class MainController implements Initializable {
         faculties = FXCollections.observableArrayList();
         departments = FXCollections.observableArrayList();
 
-        try {
-            faculties.addAll(facultyDao.getAll());
-            departments.addAll(departmentDao.getAll());
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        faculties.addAll(facultyDao.getAll());
+        departments.addAll(departmentDao.getAll());
 
         comboFaculty.setItems(faculties);
         tableFaculty.setItems(faculties);
@@ -100,14 +95,10 @@ public class MainController implements Initializable {
         } else {
             Faculty faculty = new Faculty();
             faculty.setName(txtFacultyName.getText().trim());
-            try {
-                if (facultyDao.addData(faculty) == 1) {
-                    faculties.clear();
-                    faculties.addAll(facultyDao.getAll());
-                    resetFaculty();
-                }
-            } catch (SQLException | ClassNotFoundException e) {
-                e.printStackTrace();
+            if (facultyDao.addData(faculty) == 1) {
+                faculties.clear();
+                faculties.addAll(facultyDao.getAll());
+                resetFaculty();
             }
         }
     }
@@ -122,14 +113,10 @@ public class MainController implements Initializable {
             Department department = new Department();
             department.setName(txtDepartmentName.getText().trim());
             department.setFaculty(comboFaculty.getValue());
-            try {
-                if (departmentDao.addData(department) == 1) {
-                    departments.clear();
-                    departments.addAll(departmentDao.getAll());
-                    resetDepartment();
-                }
-            } catch (SQLException | ClassNotFoundException e) {
-                e.printStackTrace();
+            if (departmentDao.addData(department) == 1) {
+                departments.clear();
+                departments.addAll(departmentDao.getAll());
+                resetDepartment();
             }
         }
     }
@@ -142,14 +129,10 @@ public class MainController implements Initializable {
             alert.showAndWait();
         } else {
             selectedFaculty.setName(txtFacultyName.getText().trim());
-            try {
-                if (facultyDao.updateData(selectedFaculty) == 1) {
-                    faculties.clear();
-                    faculties.addAll(facultyDao.getAll());
-                    resetFaculty();
-                }
-            } catch (SQLException | ClassNotFoundException e) {
-                e.printStackTrace();
+            if (facultyDao.updateData(selectedFaculty) == 1) {
+                faculties.clear();
+                faculties.addAll(facultyDao.getAll());
+                resetFaculty();
             }
         }
     }
@@ -179,14 +162,10 @@ public class MainController implements Initializable {
         } else {
             selectedDepartment.setName(txtDepartmentName.getText().trim());
             selectedDepartment.setFaculty(comboFaculty.getValue());
-            try {
-                if (departmentDao.updateData(selectedDepartment) == 1) {
-                    departments.clear();
-                    departments.addAll(departmentDao.getAll());
-                    resetDepartment();
-                }
-            } catch (SQLException | ClassNotFoundException e) {
-                e.printStackTrace();
+            if (departmentDao.updateData(selectedDepartment) == 1) {
+                departments.clear();
+                departments.addAll(departmentDao.getAll());
+                resetDepartment();
             }
         }
     }
@@ -230,24 +209,16 @@ public class MainController implements Initializable {
         alert.showAndWait();
         if (alert.getResult() == ButtonType.OK) {
             if (object instanceof Faculty) {
-                try {
-                    if (facultyDao.deleteData(selectedFaculty) == 1) {
-                        faculties.clear();
-                        faculties.addAll(facultyDao.getAll());
-                        resetFaculty();
-                    }
-                } catch (SQLException | ClassNotFoundException e) {
-                    e.printStackTrace();
+                if (facultyDao.deleteData(selectedFaculty) == 1) {
+                    faculties.clear();
+                    faculties.addAll(facultyDao.getAll());
+                    resetFaculty();
                 }
             } else if (object instanceof Department) {
-                try {
-                    if (departmentDao.deleteData(selectedDepartment) == 1) {
-                        departments.clear();
-                        departments.addAll(departmentDao.getAll());
-                        resetDepartment();
-                    }
-                } catch (SQLException | ClassNotFoundException e) {
-                    e.printStackTrace();
+                if (departmentDao.deleteData(selectedDepartment) == 1) {
+                    departments.clear();
+                    departments.addAll(departmentDao.getAll());
+                    resetDepartment();
                 }
             }
         }
